@@ -228,7 +228,10 @@
       article.innerHTML = `
         <button class="drag-handle" type="button" aria-label="${escapeHtml(getCardLabel(card))}を並べ替え"></button>
         <div class="card-top">
-          <button class="zone-button" type="button" title="国・地域を変更">${escapeHtml(getCardLabel(card))}</button>
+          <button class="zone-button" type="button" title="国・地域を変更">
+            <span class="zone-name">${escapeHtml(getCardLabel(card))}</span>
+            <span class="utc-offset"></span>
+          </button>
           ${index === 0 ? "" : `<button class="remove-button" type="button" aria-label="${escapeHtml(getCardLabel(card))}を削除">×</button>`}
         </div>
         ${index === 0 ? referenceTimeMarkup() : comparisonTimeMarkup()}
@@ -287,6 +290,11 @@
       if (!article) return;
       const parts = getZonedParts(instant, card.zone, card.ignoreDst);
       if (!parts) return;
+
+      const offsetMinutes = card.ignoreDst
+        ? getStandardOffset(card.zone, actualZonedParts(instant, card.zone).year)
+        : getOffsetMinutes(instant, card.zone);
+      article.querySelector(".utc-offset").textContent = formatUtcOffset(offsetMinutes);
 
       if (index === 0) {
         const dateInput = article.querySelector(".date-input");
@@ -452,8 +460,12 @@
     button.className = "zone-option";
     button.type = "button";
     button.setAttribute("role", "listitem");
+    const instant = state.live ? Date.now() : state.baseInstant;
     button.innerHTML = `
-      <span class="option-main">${escapeHtml(getCityName(item.zone))}</span>
+      <span class="option-primary">
+        <span class="option-main">${escapeHtml(getCityName(item.zone))}</span>
+        <span class="option-offset">${escapeHtml(formatUtcOffset(getOffsetMinutes(instant, item.zone)))}</span>
+      </span>
       <span class="option-sub">${escapeHtml(item.zone)}</span>
     `;
     button.addEventListener("click", () => selectZone(item));
@@ -660,6 +672,14 @@
 
   function formatDate(parts) {
     return `${parts.year}/${pad(parts.month)}/${pad(parts.day)}`;
+  }
+
+  function formatUtcOffset(minutes) {
+    const sign = minutes >= 0 ? "+" : "-";
+    const absolute = Math.abs(minutes);
+    const hours = Math.floor(absolute / 60);
+    const remainingMinutes = absolute % 60;
+    return `(UTC ${sign}${hours}H${remainingMinutes ? `${pad(remainingMinutes)}M` : ""})`;
   }
 
   function pad(value) {
