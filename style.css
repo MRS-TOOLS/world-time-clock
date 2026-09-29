@@ -41,7 +41,7 @@ button { color: inherit; }
 }
 
 .app-header {
-  margin-bottom: 24px;
+  margin-bottom: 18px;
   text-align: center;
 }
 
@@ -59,12 +59,6 @@ h1 {
   font-size: clamp(1.55rem, 6vw, 2rem);
   line-height: 1.25;
   letter-spacing: .02em;
-}
-
-.lead {
-  margin: 8px 0 0;
-  color: var(--muted);
-  font-size: .86rem;
 }
 
 .clock-panel { width: 100%; }
@@ -100,14 +94,22 @@ h1 {
 
 .cards {
   display: grid;
+  width: 100%;
+  min-width: 0;
   gap: 12px;
 }
 
 .time-card {
   position: relative;
   display: grid;
-  min-height: 142px;
-  padding: 17px 17px 13px 42px;
+  width: 100%;
+  min-width: 0;
+  height: 128px;
+  min-height: 128px;
+  max-height: 128px;
+  padding: 10px 14px 8px 38px;
+  grid-template-rows: 32px 46px 24px;
+  align-content: center;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 17px;
@@ -163,14 +165,16 @@ h1 {
 .card-top {
   display: flex;
   min-width: 0;
+  min-height: 32px;
+  padding-right: 32px;
   align-items: start;
   gap: 8px;
 }
 
 .zone-button {
   min-width: 0;
-  min-height: 40px;
-  padding: 3px 4px;
+  min-height: 32px;
+  padding: 0 4px;
   overflow: hidden;
   border: 0;
   border-radius: 8px;
@@ -191,15 +195,18 @@ h1 {
 }
 
 .remove-button {
-  width: 40px;
-  height: 40px;
-  margin: -2px -5px 0 auto;
-  flex: 0 0 40px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: #141414;
+  position: absolute;
+  z-index: 3;
+  top: 8px;
+  right: 9px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
   color: var(--danger);
-  font-size: 1.45rem;
+  font-size: 1.25rem;
   font-weight: 300;
   line-height: 1;
   cursor: pointer;
@@ -207,15 +214,15 @@ h1 {
 
 .remove-button:active,
 .remove-button:focus-visible {
-  border-color: var(--danger);
   outline: 0;
-  background: #231417;
+  background: rgb(255 102 116 / 10%);
 }
 
 .time-row {
   display: grid;
   min-width: 0;
-  margin-top: 7px;
+  height: 46px;
+  margin-top: 0;
   grid-template-columns: minmax(0, 1.25fr) minmax(104px, .75fr);
   align-items: center;
   gap: 12px;
@@ -248,8 +255,9 @@ h1 {
   position: relative;
   display: block;
   min-width: 0;
-  min-height: 48px;
-  padding: 5px 3px;
+  height: 46px;
+  min-height: 46px;
+  padding: 3px;
   border-bottom: 1px solid transparent;
   border-radius: 6px;
   cursor: pointer;
@@ -285,15 +293,16 @@ h1 {
 
 .card-bottom {
   display: flex;
-  min-height: 31px;
-  margin-top: 3px;
+  height: 24px;
+  min-height: 24px;
+  margin-top: 0;
   align-items: end;
   justify-content: flex-end;
 }
 
 .dst-button {
-  min-height: 30px;
-  padding: 4px 9px;
+  min-height: 24px;
+  padding: 2px 8px;
   border: 1px solid rgb(255 152 0 / 42%);
   border-radius: 999px;
   background: var(--accent-soft);
@@ -309,7 +318,7 @@ h1 {
   color: #ffd45e;
 }
 
-.dst-placeholder { min-height: 30px; }
+.dst-placeholder { min-height: 24px; }
 
 .card-divider {
   display: grid;
@@ -393,6 +402,7 @@ h1 {
   position: relative;
   display: flex;
   width: min(100%, 620px);
+  height: min(86dvh, 760px);
   max-height: min(86dvh, 760px);
   margin: 0 auto;
   padding: 12px 16px max(18px, env(safe-area-inset-bottom));
@@ -559,9 +569,20 @@ body.dragging {
   }
 
   .time-card {
-    min-height: 137px;
-    padding-right: 13px;
+    height: 124px;
+    min-height: 124px;
+    max-height: 124px;
+    padding-right: 12px;
     padding-left: 38px;
+    grid-template-rows: 31px 45px 24px;
+  }
+
+  .card-top { min-height: 31px; }
+
+  .time-row,
+  .picker-field {
+    height: 45px;
+    min-height: 45px;
   }
 
   .time-row {
