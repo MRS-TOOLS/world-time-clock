@@ -172,9 +172,13 @@ h1 {
 }
 
 .zone-button {
+  display: flex;
+  width: 100%;
   min-width: 0;
   min-height: 32px;
   padding: 0 4px;
+  align-items: baseline;
+  gap: 7px;
   overflow: hidden;
   border: 0;
   border-radius: 8px;
@@ -183,9 +187,23 @@ h1 {
   font-size: clamp(1.02rem, 4.7vw, 1.25rem);
   font-weight: 750;
   text-align: left;
+  cursor: pointer;
+}
+
+.zone-name {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  cursor: pointer;
+}
+
+.utc-offset {
+  flex: 0 0 auto;
+  color: #a8a8a8;
+  font-size: .68rem;
+  font-weight: 650;
+  letter-spacing: .01em;
+  white-space: nowrap;
 }
 
 .zone-button:active,
@@ -521,12 +539,38 @@ h1 {
 }
 
 .zone-option:active { background: #222222; }
-.option-main { font-weight: 700; }
+.option-main {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.option-primary {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.option-offset {
+  flex: 0 0 auto;
+  color: #b2b2b2;
+  font-size: .68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
 
 .option-sub {
+  max-width: 38%;
+  overflow: hidden;
   color: var(--muted);
   font-size: .72rem;
   text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chevron {
