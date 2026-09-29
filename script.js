@@ -213,6 +213,14 @@
   function renderCards() {
     cardsContainer.replaceChildren();
     state.cards.forEach((card, index) => {
+      if (index === 1) {
+        const divider = document.createElement("div");
+        divider.className = "card-divider";
+        divider.setAttribute("role", "separator");
+        divider.innerHTML = "<span>比較地域</span>";
+        cardsContainer.append(divider);
+      }
+
       const article = document.createElement("article");
       article.className = "time-card";
       article.dataset.id = card.id;
@@ -247,9 +255,15 @@
 
   function referenceTimeMarkup() {
     return `
-      <div class="time-row reference-time">
-        <input class="date-input" type="date" aria-label="基準日">
-        <input class="time-input" type="time" step="60" aria-label="基準時刻">
+      <div class="time-row reference-time" aria-label="基準日時">
+        <label class="picker-field date-picker">
+          <span class="date-text date-display"></span>
+          <input class="date-input" type="date" aria-label="基準日">
+        </label>
+        <label class="picker-field time-picker">
+          <span class="time-text time-display"></span>
+          <input class="time-input" type="time" step="60" aria-label="基準時刻">
+        </label>
       </div>
     `;
   }
@@ -277,6 +291,8 @@
       if (index === 0) {
         const dateInput = article.querySelector(".date-input");
         const timeInput = article.querySelector(".time-input");
+        article.querySelector(".date-display").textContent = formatDate(parts);
+        article.querySelector(".time-display").textContent = toInputTime(parts);
         if (document.activeElement !== dateInput) dateInput.value = toInputDate(parts);
         if (document.activeElement !== timeInput) timeInput.value = toInputTime(parts);
       } else {
@@ -469,8 +485,28 @@
   function startDrag(event, cardElement) {
     if (event.button !== undefined && event.button !== 0) return;
     event.preventDefault();
-    dragState = { cardElement, pointerId: event.pointerId };
-    cardElement.classList.add("is-dragging");
+    const rect = cardElement.getBoundingClientRect();
+    const ghost = cardElement.cloneNode(true);
+    ghost.classList.add("drag-ghost");
+    ghost.removeAttribute("data-id");
+    ghost.setAttribute("aria-hidden", "true");
+    ghost.querySelectorAll("button, input").forEach((control) => {
+      control.tabIndex = -1;
+    });
+    ghost.style.width = `${rect.width}px`;
+    ghost.style.height = `${rect.height}px`;
+    ghost.style.left = `${rect.left}px`;
+    ghost.style.top = `${rect.top}px`;
+    document.body.append(ghost);
+
+    dragState = {
+      cardElement,
+      ghost,
+      pointerId: event.pointerId,
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top
+    };
+    cardElement.classList.add("drag-source");
     document.body.classList.add("dragging");
     event.currentTarget.setPointerCapture?.(event.pointerId);
     document.addEventListener("pointermove", moveDrag, { passive: false });
@@ -481,16 +517,27 @@
   function moveDrag(event) {
     if (!dragState || event.pointerId !== dragState.pointerId) return;
     event.preventDefault();
+    dragState.ghost.style.left = `${event.clientX - dragState.offsetX}px`;
+    dragState.ghost.style.top = `${event.clientY - dragState.offsetY}px`;
+
+    const edgeSize = 72;
+    if (event.clientY < edgeSize) window.scrollBy(0, -10);
+    if (event.clientY > window.innerHeight - edgeSize) window.scrollBy(0, 10);
+
     const target = document.elementFromPoint(event.clientX, event.clientY)?.closest(".time-card");
     if (!target || target === dragState.cardElement || target.parentElement !== cardsContainer) return;
     const rect = target.getBoundingClientRect();
     const insertBefore = event.clientY < rect.top + rect.height / 2;
     cardsContainer.insertBefore(dragState.cardElement, insertBefore ? target : target.nextSibling);
+    const divider = cardsContainer.querySelector(".card-divider");
+    const firstCard = cardsContainer.querySelector(".time-card");
+    if (divider && firstCard) firstCard.after(divider);
   }
 
   function endDrag(event) {
     if (!dragState || (event.pointerId !== undefined && event.pointerId !== dragState.pointerId)) return;
-    dragState.cardElement.classList.remove("is-dragging");
+    dragState.cardElement.classList.remove("drag-source");
+    dragState.ghost.remove();
     document.body.classList.remove("dragging");
     document.removeEventListener("pointermove", moveDrag);
     document.removeEventListener("pointerup", endDrag);
