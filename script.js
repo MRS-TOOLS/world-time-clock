@@ -3,6 +3,8 @@
 
   const STORAGE_KEY = "mrs-world-time-comparator-v1";
   const DEFAULT_ZONE = "Asia/Tokyo";
+  const LONG_PRESS_DELAY = 350;
+  const LONG_PRESS_MOVE_LIMIT = 10;
   const formatterCache = new Map();
   const standardOffsetCache = new Map();
   const displayNames = typeof Intl.DisplayNames === "function"
@@ -83,6 +85,8 @@
   let modalState = { step: "country", country: null, targetId: null, mode: "add" };
   let toastTimer = null;
   let dragState = null;
+  let longPressState = null;
+  let suppressClickUntil = 0;
 
   const zones = normalizeZones(window.TIME_ZONES || []);
   const countries = buildCountries(zones);
@@ -103,6 +107,7 @@
     modalBack.addEventListener("click", showCountryStep);
     modal.querySelector("[data-close-modal]").addEventListener("click", closeZoneModal);
     zoneSearch.addEventListener("input", renderZoneOptions);
+    document.addEventListener("click", suppressClickAfterLongPress, true);
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && !modal.hidden) closeZoneModal();
     });
@@ -250,6 +255,12 @@
       });
       article.querySelector(".remove-button")?.addEventListener("click", () => removeCard(card.id));
       article.querySelector(".drag-handle").addEventListener("pointerdown", (event) => startDrag(event, article));
+      article.addEventListener("pointerdown", (event) => beginCardLongPress(event, article));
+      article.addEventListener("contextmenu", (event) => {
+        if (longPressState?.cardElement === article || dragState?.cardElement === article) {
+          event.preventDefault();
+        }
+      });
 
       if (index === 0) {
         const dateInput = article.querySelector(".date-input");
@@ -502,8 +513,73 @@
   }
 
   function startDrag(event, cardElement) {
-    if (event.button !== undefined && event.button !== 0) return;
+    if ((event.button !== undefined && event.button !== 0) || dragState) return;
+    cancelCardLongPress();
     event.preventDefault();
+    beginDrag(cardElement, event.pointerId, event.clientX, event.clientY, event.currentTarget);
+  }
+
+  function beginCardLongPress(event, cardElement) {
+    if (event.button !== undefined && event.button !== 0) return;
+    if (event.isPrimary === false || dragState || event.target.closest(".drag-handle")) return;
+    cancelCardLongPress();
+
+    const press = {
+      cardElement,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      clientX: event.clientX,
+      clientY: event.clientY,
+      timerId: null
+    };
+    press.timerId = window.setTimeout(() => activateCardLongPress(press), LONG_PRESS_DELAY);
+    longPressState = press;
+    document.addEventListener("pointermove", trackCardLongPress, { passive: true });
+    document.addEventListener("pointerup", cancelCardLongPress);
+    document.addEventListener("pointercancel", cancelCardLongPress);
+  }
+
+  function trackCardLongPress(event) {
+    if (!longPressState || event.pointerId !== longPressState.pointerId) return;
+    longPressState.clientX = event.clientX;
+    longPressState.clientY = event.clientY;
+    const moved = Math.hypot(
+      event.clientX - longPressState.startX,
+      event.clientY - longPressState.startY
+    );
+    if (moved > LONG_PRESS_MOVE_LIMIT) cancelCardLongPress(event);
+  }
+
+  function activateCardLongPress(press) {
+    if (longPressState !== press) return;
+    cleanupCardLongPress();
+    suppressClickUntil = performance.now() + 800;
+    beginDrag(press.cardElement, press.pointerId, press.clientX, press.clientY, press.cardElement);
+  }
+
+  function cancelCardLongPress(event) {
+    if (!longPressState) return;
+    if (event?.pointerId !== undefined && event.pointerId !== longPressState.pointerId) return;
+    window.clearTimeout(longPressState.timerId);
+    cleanupCardLongPress();
+  }
+
+  function cleanupCardLongPress() {
+    longPressState = null;
+    document.removeEventListener("pointermove", trackCardLongPress);
+    document.removeEventListener("pointerup", cancelCardLongPress);
+    document.removeEventListener("pointercancel", cancelCardLongPress);
+  }
+
+  function suppressClickAfterLongPress(event) {
+    if (performance.now() >= suppressClickUntil) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  function beginDrag(cardElement, pointerId, clientX, clientY, captureElement) {
+    if (dragState) return;
     const rect = cardElement.getBoundingClientRect();
     const ghost = cardElement.cloneNode(true);
     ghost.classList.add("drag-ghost");
@@ -521,16 +597,21 @@
     dragState = {
       cardElement,
       ghost,
-      pointerId: event.pointerId,
-      offsetX: event.clientX - rect.left,
-      offsetY: event.clientY - rect.top
+      pointerId,
+      offsetX: clientX - rect.left,
+      offsetY: clientY - rect.top
     };
     cardElement.classList.add("drag-source");
     document.body.classList.add("dragging");
-    event.currentTarget.setPointerCapture?.(event.pointerId);
+    captureElement.setPointerCapture?.(pointerId);
     document.addEventListener("pointermove", moveDrag, { passive: false });
     document.addEventListener("pointerup", endDrag, { once: true });
     document.addEventListener("pointercancel", endDrag, { once: true });
+    document.addEventListener("touchmove", preventTouchScrollDuringDrag, { passive: false });
+  }
+
+  function preventTouchScrollDuringDrag(event) {
+    if (dragState) event.preventDefault();
   }
 
   function moveDrag(event) {
@@ -561,6 +642,7 @@
     document.removeEventListener("pointermove", moveDrag);
     document.removeEventListener("pointerup", endDrag);
     document.removeEventListener("pointercancel", endDrag);
+    document.removeEventListener("touchmove", preventTouchScrollDuringDrag);
     const order = [...cardsContainer.querySelectorAll(".time-card")].map((element) => element.dataset.id);
     state.cards.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
     dragState = null;
