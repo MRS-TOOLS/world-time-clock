@@ -108,7 +108,7 @@ h1 {
   min-height: 128px;
   max-height: 128px;
   padding: 10px 14px 8px 38px;
-  grid-template-rows: 32px 46px 24px;
+  grid-template-rows: 56px 46px;
   align-content: center;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -162,40 +162,58 @@ h1 {
   transition: none !important;
 }
 
-.card-top {
-  display: flex;
+.card-location {
+  display: grid;
   min-width: 0;
-  min-height: 32px;
-  padding-right: 32px;
-  align-items: start;
-  gap: 8px;
+  height: 56px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 28px 28px;
+  align-items: center;
+  column-gap: 7px;
 }
 
 .zone-button {
-  display: flex;
-  width: 100%;
+  height: 28px;
   min-width: 0;
-  min-height: 32px;
   padding: 0 4px;
-  align-items: baseline;
-  gap: 7px;
   overflow: hidden;
   border: 0;
-  border-radius: 8px;
+  border-radius: 6px;
   background: transparent;
-  color: #e8e8e8;
-  font-size: clamp(1.02rem, 4.7vw, 1.25rem);
-  font-weight: 750;
   text-align: left;
   cursor: pointer;
 }
 
-.zone-name {
+.country-button {
+  display: block;
+  grid-column: 1;
+  grid-row: 1;
+  color: #eeeeee;
+  font-size: clamp(.96rem, 4.3vw, 1.12rem);
+  font-weight: 760;
+}
+
+.country-name,
+.region-name {
+  display: block;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.region-button {
+  display: flex;
+  grid-column: 1;
+  grid-row: 2;
+  align-items: baseline;
+  gap: 6px;
+  color: #d0d0d0;
+  font-size: clamp(.84rem, 3.8vw, .96rem);
+  font-weight: 680;
+}
+
+.region-name { flex: 0 1 auto; }
 
 .utc-offset {
   flex: 0 0 auto;
@@ -213,10 +231,9 @@ h1 {
 }
 
 .remove-button {
-  position: absolute;
   z-index: 3;
-  top: 8px;
-  right: 9px;
+  grid-column: 2;
+  grid-row: 1;
   width: 28px;
   height: 28px;
   padding: 0;
@@ -228,6 +245,13 @@ h1 {
   font-weight: 300;
   line-height: 1;
   cursor: pointer;
+}
+
+.remove-placeholder {
+  grid-column: 2;
+  grid-row: 1;
+  width: 28px;
+  height: 28px;
 }
 
 .remove-button:active,
@@ -309,12 +333,13 @@ h1 {
   cursor: pointer;
 }
 
-.card-bottom {
+.dst-slot {
   display: flex;
+  grid-column: 2;
+  grid-row: 2;
   height: 24px;
   min-height: 24px;
-  margin-top: 0;
-  align-items: end;
+  align-items: center;
   justify-content: flex-end;
 }
 
@@ -623,10 +648,15 @@ body.dragging {
     max-height: 124px;
     padding-right: 12px;
     padding-left: 38px;
-    grid-template-rows: 31px 45px 24px;
+    grid-template-rows: 54px 45px;
   }
 
-  .card-top { min-height: 31px; }
+  .card-location {
+    height: 54px;
+    grid-template-rows: 27px 27px;
+  }
+
+  .zone-button { height: 27px; }
 
   .time-row,
   .picker-field {
