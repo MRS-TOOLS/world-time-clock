@@ -130,6 +130,8 @@ h1 {
   box-shadow: var(--shadow);
   transition: border-color .16s ease, opacity .16s ease, transform .16s ease;
   -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .time-card:focus-within { border-color: rgb(255 152 0 / 55%); }
