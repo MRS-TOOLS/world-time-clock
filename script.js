@@ -227,18 +227,25 @@
       article.dataset.zone = card.zone;
       article.innerHTML = `
         <button class="drag-handle" type="button" aria-label="${escapeHtml(getCardLabel(card))}を並べ替え"></button>
-        <div class="card-top">
-          <button class="zone-button" type="button" title="国・地域を変更">
-            <span class="zone-name">${escapeHtml(getCardLabel(card))}</span>
+        <div class="card-location">
+          <button class="zone-button country-button" type="button" title="国・地域を変更">
+            <span class="country-name">${escapeHtml(getCountryName(card.country))}</span>
+          </button>
+          ${index === 0
+            ? `<span class="remove-placeholder" aria-hidden="true"></span>`
+            : `<button class="remove-button" type="button" aria-label="${escapeHtml(getCardLabel(card))}を削除">×</button>`}
+          <button class="zone-button region-button" type="button" title="国・地域を変更">
+            <span class="region-name">${escapeHtml(getCityName(card.zone))}</span>
             <span class="utc-offset"></span>
           </button>
-          ${index === 0 ? "" : `<button class="remove-button" type="button" aria-label="${escapeHtml(getCardLabel(card))}を削除">×</button>`}
+          <div class="dst-slot"><span class="dst-placeholder"></span></div>
         </div>
         ${index === 0 ? referenceTimeMarkup() : comparisonTimeMarkup()}
-        <div class="card-bottom"><span class="dst-placeholder"></span></div>
       `;
 
-      article.querySelector(".zone-button").addEventListener("click", () => openZoneModal("replace", card.id));
+      article.querySelectorAll(".zone-button").forEach((button) => {
+        button.addEventListener("click", () => openZoneModal("replace", card.id));
+      });
       article.querySelector(".remove-button")?.addEventListener("click", () => removeCard(card.id));
       article.querySelector(".drag-handle").addEventListener("pointerdown", (event) => startDrag(event, article));
 
@@ -312,7 +319,7 @@
   }
 
   function updateDstControl(article, card, instant) {
-    const bottom = article.querySelector(".card-bottom");
+    const bottom = article.querySelector(".dst-slot");
     const mode = card.ignoreDst ? "ignored" : (isDstAt(instant, card.zone) ? "active" : "none");
     const current = bottom.firstElementChild;
     const currentMode = current?.classList.contains("dst-button")
