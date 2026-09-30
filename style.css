@@ -638,6 +638,14 @@ body.dragging {
   user-select: none;
 }
 
+@media (max-width: 620px) {
+  .modal-sheet {
+    width: calc(100% - 16px);
+    height: calc(100dvh - max(8px, env(safe-area-inset-top)));
+    max-height: none;
+  }
+}
+
 @media (max-width: 420px) {
   .app-shell {
     padding-right: 13px;
