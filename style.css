@@ -231,9 +231,10 @@ h1 {
 }
 
 .remove-button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
   z-index: 3;
-  grid-column: 2;
-  grid-row: 1;
   width: 28px;
   height: 28px;
   padding: 0;
@@ -338,6 +339,7 @@ h1 {
   grid-column: 2;
   grid-row: 2;
   height: 24px;
+  min-width: 28px;
   min-height: 24px;
   align-items: center;
   justify-content: flex-end;
