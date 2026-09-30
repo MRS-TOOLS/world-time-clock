@@ -447,6 +447,7 @@ h1 {
   position: relative;
   display: flex;
   width: min(100%, 620px);
+  min-width: 0;
   height: min(86dvh, 760px);
   max-height: min(86dvh, 760px);
   margin: 0 auto;
@@ -457,6 +458,7 @@ h1 {
   border-radius: 20px 20px 0 0;
   background: #151515;
   box-shadow: 0 -18px 44px rgb(0 0 0 / 55%);
+  overflow: hidden;
   animation: sheet-in .2s ease-out;
 }
 
@@ -542,6 +544,9 @@ h1 {
 }
 
 .zone-list {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -552,6 +557,8 @@ h1 {
 .zone-option {
   display: flex;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 54px;
   padding: 10px 8px;
   align-items: center;
@@ -574,6 +581,8 @@ h1 {
   white-space: nowrap;
 }
 
+.zone-option > .option-main { flex: 1 1 0; }
+
 .option-primary {
   display: flex;
   flex: 1 1 auto;
@@ -591,6 +600,7 @@ h1 {
 }
 
 .option-sub {
+  flex: 0 0 auto;
   max-width: 38%;
   overflow: hidden;
   color: var(--muted);
@@ -601,6 +611,7 @@ h1 {
 }
 
 .chevron {
+  flex: 0 0 auto;
   color: var(--accent);
   font-size: 1.35rem;
 }
