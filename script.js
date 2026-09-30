@@ -5,7 +5,6 @@
   const DEFAULT_ZONE = "Asia/Tokyo";
   const formatterCache = new Map();
   const standardOffsetCache = new Map();
-  const localizedCityNameCache = new Map();
   const displayNames = typeof Intl.DisplayNames === "function"
     ? new Intl.DisplayNames(["ja"], { type: "region" })
     : null;
@@ -203,33 +202,10 @@
 
   function getCityName(zone) {
     if (CITY_NAMES_JA[zone]) return CITY_NAMES_JA[zone];
-
-    if (localizedCityNameCache.has(zone)) return localizedCityNameCache.get(zone);
-
-    try {
-      const formatter = new Intl.DateTimeFormat("ja-JP", {
-        timeZone: zone,
-        timeZoneName: "shortGeneric"
-      });
-      const localizedName = formatter
-        .formatToParts(new Date())
-        .find((part) => part.type === "timeZoneName")
-        ?.value
-        .replace(/(?:標準時|夏時間|時間)$/, "")
-        .trim();
-
-      if (localizedName && !/^[A-Z]{2,5}$/.test(localizedName) && !/^GMT[+-]/.test(localizedName)) {
-        localizedCityNameCache.set(zone, localizedName);
-        return localizedName;
-      }
-    } catch {
-      // Fall through to a readable IANA location name.
-    }
+    if (window.TIME_ZONE_NAMES_JA?.[zone]) return window.TIME_ZONE_NAMES_JA[zone];
 
     const parts = zone.split("/").slice(1).map((part) => part.replaceAll("_", " "));
-    const fallbackName = parts.join("・");
-    localizedCityNameCache.set(zone, fallbackName);
-    return fallbackName;
+    return parts.join("・");
   }
 
   function getCardLabel(card) {
