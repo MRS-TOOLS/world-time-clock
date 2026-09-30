@@ -5,6 +5,7 @@
   const DEFAULT_ZONE = "Asia/Tokyo";
   const formatterCache = new Map();
   const standardOffsetCache = new Map();
+  const localizedCityNameCache = new Map();
   const displayNames = typeof Intl.DisplayNames === "function"
     ? new Intl.DisplayNames(["ja"], { type: "region" })
     : null;
@@ -202,8 +203,33 @@
 
   function getCityName(zone) {
     if (CITY_NAMES_JA[zone]) return CITY_NAMES_JA[zone];
+
+    if (localizedCityNameCache.has(zone)) return localizedCityNameCache.get(zone);
+
+    try {
+      const formatter = new Intl.DateTimeFormat("ja-JP", {
+        timeZone: zone,
+        timeZoneName: "shortGeneric"
+      });
+      const localizedName = formatter
+        .formatToParts(new Date())
+        .find((part) => part.type === "timeZoneName")
+        ?.value
+        .replace(/(?:標準時|夏時間|時間)$/, "")
+        .trim();
+
+      if (localizedName && !/^[A-Z]{2,5}$/.test(localizedName) && !/^GMT[+-]/.test(localizedName)) {
+        localizedCityNameCache.set(zone, localizedName);
+        return localizedName;
+      }
+    } catch {
+      // Fall through to a readable IANA location name.
+    }
+
     const parts = zone.split("/").slice(1).map((part) => part.replaceAll("_", " "));
-    return parts.join("・");
+    const fallbackName = parts.join("・");
+    localizedCityNameCache.set(zone, fallbackName);
+    return fallbackName;
   }
 
   function getCardLabel(card) {
@@ -472,7 +498,6 @@
         <span class="option-main">${escapeHtml(getCityName(item.zone))}</span>
         <span class="option-offset">${escapeHtml(formatUtcOffset(getOffsetMinutes(instant, item.zone)))}</span>
       </span>
-      <span class="option-sub">${escapeHtml(item.zone)}</span>
     `;
     button.addEventListener("click", () => selectZone(item));
     return button;
