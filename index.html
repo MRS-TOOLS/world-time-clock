@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#050505">
   <meta name="description" content="基準地域の日時から、世界各地の日時をまとめて比較できるツールです。">
   <title>世界時差比較 | MRS TOOLS</title>
-  <link rel="stylesheet" href="style.css?v=20260930-8">
+  <link rel="stylesheet" href="style.css?v=20260930-12">
 </head>
 <body>
   <main class="app-shell">
@@ -16,12 +16,13 @@
     </header>
 
     <section class="clock-panel" aria-label="世界時差比較">
-      <label class="live-control" for="live-clock">
-        <input id="live-clock" type="checkbox">
-        <span>現在時刻に連動</span>
-      </label>
-
-      <p class="reference-label">基準地域</p>
+      <div class="reference-toolbar">
+        <p class="reference-label">基準地域</p>
+        <label class="live-control" for="live-clock">
+          <input id="live-clock" type="checkbox">
+          <span>現在時刻に連動</span>
+        </label>
+      </div>
       <div id="cards" class="cards" aria-live="polite"></div>
 
       <button id="add-card" class="add-button" type="button" aria-label="比較する地域を追加">
@@ -31,6 +32,10 @@
 
       <p class="drag-help">左端のハンドルをドラッグすると、基準地域と表示順を変更できます。</p>
     </section>
+
+    <footer class="site-footer">
+      <a class="mrs-tools-link" href="https://mrs-tools.pages.dev/" target="_blank" rel="noopener noreferrer">MRS TOOLS</a>
+    </footer>
   </main>
 
   <div id="zone-modal" class="modal" hidden>
@@ -57,5 +62,13 @@
 
   <script src="timezones.js?v=20260930-10"></script>
   <script src="script.js?v=20260930-10"></script>
+
+  <div class="ad-banner" aria-label="広告">
+    <div class="ad-banner-inner">
+      <!-- admax -->
+      <script src="https://adm.shinobi.jp/s/8a495d941206bf0c34aff9559f8d2cea"></script>
+      <!-- admax -->
+    </div>
+  </div>
 </body>
 </html>

@@ -35,13 +35,16 @@ input { font: inherit; }
 button { color: inherit; }
 
 .app-shell {
+  display: flex;
   width: min(100%, 620px);
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: max(24px, env(safe-area-inset-top)) 16px max(34px, env(safe-area-inset-bottom));
+  padding: max(24px, env(safe-area-inset-top)) 16px calc(78px + env(safe-area-inset-bottom));
+  flex-direction: column;
 }
 
 .app-header {
-  margin-bottom: 18px;
+  margin-bottom: 10px;
   text-align: center;
 }
 
@@ -63,32 +66,42 @@ h1 {
 
 .clock-panel { width: 100%; }
 
+.reference-toolbar {
+  display: flex;
+  min-height: 32px;
+  margin: 0 8px 6px 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .live-control {
   display: flex;
   width: fit-content;
-  min-height: 44px;
-  margin: 0 0 8px 2px;
+  min-height: 32px;
+  margin: 0;
   align-items: center;
-  gap: 10px;
-  color: #dedede;
+  gap: 7px;
+  color: #c8c8c8;
   cursor: pointer;
-  font-size: .98rem;
-  font-weight: 750;
+  font-size: .76rem;
+  font-weight: 700;
   user-select: none;
+  white-space: nowrap;
 }
 
 .live-control input {
-  width: 23px;
-  height: 23px;
+  width: 17px;
+  height: 17px;
   margin: 0;
   accent-color: var(--accent);
 }
 
 .reference-label {
-  margin: 0 0 7px 10px;
+  margin: 0;
   color: var(--accent);
-  font-size: .72rem;
-  font-weight: 750;
+  font-size: .84rem;
+  font-weight: 800;
   letter-spacing: .06em;
 }
 
@@ -424,6 +437,48 @@ h1 {
   font-size: .72rem;
   line-height: 1.55;
   text-align: center;
+}
+
+.site-footer {
+  margin-top: auto;
+  padding-top: 28px;
+  text-align: center;
+}
+
+.mrs-tools-link {
+  display: inline-block;
+  padding: 6px 10px;
+  color: #8b8b8b;
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color .16s ease;
+}
+
+.mrs-tools-link:hover,
+.mrs-tools-link:focus-visible {
+  color: #d0d0d0;
+  outline: 0;
+}
+
+.ad-banner {
+  position: fixed;
+  z-index: 90;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 1px 0 calc(1px + env(safe-area-inset-bottom));
+  border-top: 1px solid #292929;
+  background: #0d0d0d;
+}
+
+.ad-banner-inner {
+  max-width: 100%;
+  line-height: 0;
 }
 
 .modal[hidden] { display: none; }
