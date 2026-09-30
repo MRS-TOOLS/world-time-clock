@@ -202,6 +202,8 @@
 
   function getCityName(zone) {
     if (CITY_NAMES_JA[zone]) return CITY_NAMES_JA[zone];
+    if (window.TIME_ZONE_NAMES_JA?.[zone]) return window.TIME_ZONE_NAMES_JA[zone];
+
     const parts = zone.split("/").slice(1).map((part) => part.replaceAll("_", " "));
     return parts.join("・");
   }
@@ -472,7 +474,6 @@
         <span class="option-main">${escapeHtml(getCityName(item.zone))}</span>
         <span class="option-offset">${escapeHtml(formatUtcOffset(getOffsetMinutes(instant, item.zone)))}</span>
       </span>
-      <span class="option-sub">${escapeHtml(item.zone)}</span>
     `;
     button.addEventListener("click", () => selectZone(item));
     return button;
