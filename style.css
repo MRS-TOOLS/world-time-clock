@@ -129,6 +129,9 @@ h1 {
   background: linear-gradient(145deg, #1b1b1b, #151515);
   box-shadow: var(--shadow);
   transition: border-color .16s ease, opacity .16s ease, transform .16s ease;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .time-card:focus-within { border-color: rgb(255 152 0 / 55%); }
@@ -701,6 +704,7 @@ body.modal-open { overflow: hidden; }
 body.dragging {
   overflow: hidden;
   cursor: grabbing;
+  touch-action: none;
   user-select: none;
 }
 
