@@ -422,7 +422,6 @@
     zoneSearch.value = "";
     zoneSearch.placeholder = "地域名で検索";
     renderZoneOptions();
-    zoneSearch.focus({ preventScroll: true });
   }
 
   function renderZoneOptions() {
