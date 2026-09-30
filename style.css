@@ -35,9 +35,12 @@ input { font: inherit; }
 button { color: inherit; }
 
 .app-shell {
+  display: flex;
   width: min(100%, 620px);
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: max(24px, env(safe-area-inset-top)) 16px max(34px, env(safe-area-inset-bottom));
+  padding: max(24px, env(safe-area-inset-top)) 16px calc(78px + env(safe-area-inset-bottom));
+  flex-direction: column;
 }
 
 .app-header {
@@ -424,6 +427,48 @@ h1 {
   font-size: .72rem;
   line-height: 1.55;
   text-align: center;
+}
+
+.site-footer {
+  margin-top: auto;
+  padding-top: 28px;
+  text-align: center;
+}
+
+.mrs-tools-link {
+  display: inline-block;
+  padding: 6px 10px;
+  color: #8b8b8b;
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color .16s ease;
+}
+
+.mrs-tools-link:hover,
+.mrs-tools-link:focus-visible {
+  color: #d0d0d0;
+  outline: 0;
+}
+
+.ad-banner {
+  position: fixed;
+  z-index: 90;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 1px 0 calc(1px + env(safe-area-inset-bottom));
+  border-top: 1px solid #292929;
+  background: #0d0d0d;
+}
+
+.ad-banner-inner {
+  max-width: 100%;
+  line-height: 0;
 }
 
 .modal[hidden] { display: none; }
