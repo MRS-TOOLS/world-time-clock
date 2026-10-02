@@ -6,7 +6,7 @@
       <circle cx="193" cy="256" r="145"/>
     </clipPath>
   </defs>
-  <g fill="none" stroke="#65c8d9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="none" stroke="#ff9800" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="193" cy="256" r="145"/>
     <g clip-path="url(#globe-clip)">
       <path d="M193 111c-42 34-67 86-67 145s25 111 67 145M193 111c42 34 67 86 67 145s-25 111-67 145"/>
@@ -16,5 +16,4 @@
   <circle cx="313" cy="259" r="151" fill="#0d1420"/>
   <circle cx="313" cy="259" r="140" fill="#172230" stroke="#eef6fa" stroke-width="17"/>
   <path d="M313 181v78l65 39" fill="none" stroke="#eef6fa" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="313" cy="259" r="11" fill="#65c8d9"/>
 </svg>

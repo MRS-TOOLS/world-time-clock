@@ -3,7 +3,7 @@
 // Keep these URLs in sync with the versioned references in index.html.
 // Bump CACHE_NAME whenever these files or the app shell are released.
 const CACHE_PREFIX = "mrs-world-time-clock-";
-const CACHE_NAME = `${CACHE_PREFIX}v2`;
+const CACHE_NAME = `${CACHE_PREFIX}v3`;
 const APP_FILES = [
   "./",
   "./index.html",
