@@ -63,6 +63,13 @@
   <script src="timezones.js?v=20260930-10"></script>
   <script src="script.js?v=20260930-11"></script>
 
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js", { updateViaCache: "none" })
+        .catch((error) => console.warn("オフライン機能を準備できませんでした。", error));
+    }
+  </script>
+
   <div class="ad-banner" aria-label="広告">
     <div class="ad-banner-inner">
       <!-- admax -->
