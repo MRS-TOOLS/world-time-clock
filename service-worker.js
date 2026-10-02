@@ -52,7 +52,7 @@ self.addEventListener("fetch", (event) => {
         try {
           await cache.put(request, response.clone());
         } catch (error) {
-          console.warn("オフライン用キャッシュを更新できませんでした。", error);
+          console.warn("Could not update the offline cache.", error);
         }
       }
       return response;
