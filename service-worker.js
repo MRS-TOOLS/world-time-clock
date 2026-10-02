@@ -3,13 +3,18 @@
 // Keep these URLs in sync with the versioned references in index.html.
 // Bump CACHE_NAME whenever these files or the app shell are released.
 const CACHE_PREFIX = "mrs-world-time-clock-";
-const CACHE_NAME = `${CACHE_PREFIX}v1`;
+const CACHE_NAME = `${CACHE_PREFIX}v3`;
 const APP_FILES = [
   "./",
   "./index.html",
   "./style.css?v=20260930-14",
   "./timezones.js?v=20260930-10",
-  "./script.js?v=20260930-11"
+  "./script.js?v=20260930-11",
+  "./manifest.webmanifest",
+  "./pwa-icon.svg",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./apple-touch-icon.png"
 ].map((path) => new URL(path, self.registration.scope).href);
 const OFFLINE_PAGE = new URL("./index.html", self.registration.scope).href;
 
